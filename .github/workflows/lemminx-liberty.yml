@@ -29,6 +29,7 @@ jobs:
         working-directory: ./lemminx-liberty
         run: mvn -B package --file pom.xml
       - name: HCL AppScan CodeSweep
+        if: runner.os == 'Linux'
         uses: HCL-TECH-SOFTWARE/appscan-codesweep-action@v1
         with:
           asoc_key: ${{secrets.ASOC_KEY_ID}}
