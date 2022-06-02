@@ -28,6 +28,12 @@ jobs:
       - name: Build with Maven
         working-directory: ./lemminx-liberty
         run: mvn -B package --file pom.xml
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: liberty-lemminx
+          path: | 
+            **/liberty-langserver-lemminx-*.jar
       - name: HCL AppScan CodeSweep
         if: runner.os == 'Linux'
         uses: HCL-TECH-SOFTWARE/appscan-codesweep-action@v1
