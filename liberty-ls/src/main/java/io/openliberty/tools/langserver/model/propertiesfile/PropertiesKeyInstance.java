@@ -18,6 +18,7 @@ import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.MarkupContent;
+import org.eclipse.lsp4j.MarkupKind;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 
@@ -55,10 +56,16 @@ public class PropertiesKeyInstance {
         Position rangeEnd = new Position(line, propertyKey.length());
         Range range = new Range(rangeStart, rangeEnd);
 
-        Hover hover = new Hover(new MarkupContent("markdown", message), range);
+        Hover hover = new Hover(new MarkupContent(MarkupKind.MARKDOWN, message), range);
         return CompletableFuture.completedFuture(hover);
     }
 
+    /**
+     * Get completions for keys.
+     * @param enteredText
+     * @param position
+     * @return
+     */
     public CompletableFuture<List<CompletionItem>> getCompletions(String enteredText, Position position) {
         List<String> matches = Messages.getMatchingKeys(enteredText, textDocumentItem);
         List<CompletionItem> results = matches.stream().map(s -> new CompletionItem(s)).collect(Collectors.toList());
@@ -83,7 +90,8 @@ public class PropertiesKeyInstance {
             }
             String keyToUse = key == null ? item.getLabel() : key;
             String desc = Messages.getPropDescription(keyToUse);
-            item.setDetail(desc);
+            MarkupContent markdown = new MarkupContent(MarkupKind.MARKDOWN, desc);
+            item.setDocumentation(markdown);
             // if setDefault is true, we are dealing with values which are considered text.
             // otherwise we are dealing with keys which are considered properties.
             if (setDefault) {
