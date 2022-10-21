@@ -48,9 +48,9 @@ jobs:
             appscanConfig=$(find . -type f -name appscan-config.xml)
             echo $appscan
             echo $appscanConfig
-      #
-            # ${appscan} prepare -c ${appscanConfig}
-            # ${appscan} api_login -P $APPSCAN_API_KEY_SECRET -u $APPSCAN_API_KEY_ID -persist
+            ${appscan} prepare -c ${appscanConfig}
+            ${appscan} api_login -P $APPSCAN_API_KEY_SECRET -u $APPSCAN_API_KEY_ID -persist
+          #
             # irxFile=$(find . -type f -name *.irx)
             # queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n vscode-${irxFile})
             # echo $queueOutput
