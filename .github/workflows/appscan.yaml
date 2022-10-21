@@ -25,7 +25,7 @@ jobs:
           path: appscan
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: ./language-server-jars
+        working-directory: appscan
       - name: Get Date
         id: get-date
         run: |
