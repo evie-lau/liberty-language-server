@@ -1,4 +1,4 @@
-name: Build Liberty Config Language Server & Lemminx-Liberty
+name: Build
 
 on:
   push:
