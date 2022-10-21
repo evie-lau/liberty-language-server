@@ -1,4 +1,4 @@
-name: Java CI - Lemminx Liberty & Liberty Language Server
+name: Build Liberty Config Language Server & Lemminx-Liberty
 
 on:
   push:
@@ -26,3 +26,10 @@ jobs:
       - name: Build Liberty Language Server
         working-directory: ./liberty-ls
         run: mvn -B package --file pom.xml
+      - name: Archive jars
+        if: runner.os == 'Linux'
+        uses: actions/upload-artifact@v3
+        with:
+          path: ./**/*.jar
+          if-no-files-found: warn
+          retention-days: 7
