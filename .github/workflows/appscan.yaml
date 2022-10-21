@@ -10,10 +10,7 @@ on:
 
 jobs:
   appscan:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -53,7 +50,7 @@ jobs:
             ${appscan} prepare -c ${appscanConfig}
             ${appscan} api_login -P $APPSCAN_API_KEY_SECRET -u $APPSCAN_API_KEY_ID -persist
             irxFile=$(find . -type f -name *.irx)
-            queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n vscode-${irxFile})
+            queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n ${irxFile})
             echo $queueOutput
       # - uses: actions/upload-artifact@v3
       #   with:
