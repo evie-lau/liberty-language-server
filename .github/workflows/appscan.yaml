@@ -42,8 +42,9 @@ jobs:
             unzip sast.zip -d appscan-folder
       - name: Run appscan
         env:
-          APPSCAN_API_KEY_SECRET : ${{ secrets.APPSCAN_API_KEY_SECRET }}
-          APPSCAN_API_KEY_ID : ${{ secrets.APPSCAN_API_KEY_ID }}
+          APPSCAN_API_KEY_SECRET: ${{ secrets.APPSCAN_API_KEY_SECRET }}
+          APPSCAN_API_KEY_ID: ${{ secrets.APPSCAN_API_KEY_ID }}
+          APPSCAN_APP_ID: ${{ secrets.APPSCAN_APP_ID }}
         run: |
             appscan=$(find . -type f -name appscan.sh)
             appscanConfig=$(find . -type f -name appscan-config.xml)
@@ -51,10 +52,9 @@ jobs:
             echo $appscanConfig
             ${appscan} prepare -c ${appscanConfig}
             ${appscan} api_login -P $APPSCAN_API_KEY_SECRET -u $APPSCAN_API_KEY_ID -persist
-          #
-            # irxFile=$(find . -type f -name *.irx)
-            # queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n vscode-${irxFile})
-            # echo $queueOutput
+            irxFile=$(find . -type f -name *.irx)
+            queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n vscode-${irxFile})
+            echo $queueOutput
       # - uses: actions/upload-artifact@v3
       #   with:
       #     name: appscan
