@@ -1,0 +1,58 @@
+name: Run SAST appscan
+
+on:
+  push:
+    branches: '**'
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+
+    steps:
+      - uses: actions/download-artifact@v3
+        id: download
+        with:
+          name: 'language-server-jars'
+          path: ./language-server-jars
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: ./language-server-jars
+      - name: Get Date
+        id: get-date
+        run: |
+          echo "date=$(/bin/date -u "+%Y%m")" >> $GITHUB_OUTPUT
+        shell: bash
+      - name: Cache appscan
+        id: cache-appscan
+        uses: actions/cache@v3
+        with:
+          path: appscan-folder
+          key: ${{ runner.os }}-${{ steps.get-date.outputs.date }}-appscan
+      - name: Download appscan
+        if: steps.cache-appscan.outputs.cache-hit != 'true'
+        run: |
+            curl --output sast.zip https://cloud.appscan.com/api/SCX/StaticAnalyzer/SAClientUtil?os=linux
+            unzip sast.zip -d appscan-folder
+      - name: Run appscan
+        run: |
+            appscan=$(find . -type f -name appscan.sh)
+            appscanConfig=$(find . -type f -name appscan-config.xml)
+            echo $appscan
+            echo $appscanConfig
+      #
+            # ${appscan} prepare -c ${appscanConfig}
+            # ${appscan} api_login -P $APPSCAN_API_KEY_SECRET -u $APPSCAN_API_KEY_ID -persist
+            # irxFile=$(find . -type f -name *.irx)
+            # queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n vscode-${irxFile})
+            # echo $queueOutput
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: appscan
+      #     path: ./**/*.irx
+      #     if-no-files-found: warn
+      #     retention-days: 7
