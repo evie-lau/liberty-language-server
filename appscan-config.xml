@@ -1,0 +1,6 @@
+<Configuration>
+    <Targets>
+      <Target outputs-only="true" path="./appscan">
+      </Target>
+    </Targets>
+  </Configuration>

@@ -3,22 +3,24 @@ name: Run SAST appscan
 on:
   workflow_run:
     workflows: [Build]
-    types: [completed]
-    branches: '**'
+    types:
+      - completed
 
 jobs:
-  build:
+  appscan:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
 
     steps:
-      - uses: actions/download-artifact@v3
-        id: download
+      - name: Download artifact
+        id: download-artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
-          name: 'language-server-jars'
-          path: ./language-server-jars
+          workflow: build.yaml
+          name: language-server-jars
+          path: appscan
       - name: Display structure of downloaded files
         run: ls -R
         working-directory: ./language-server-jars
