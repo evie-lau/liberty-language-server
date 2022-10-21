@@ -41,6 +41,9 @@ jobs:
             curl --output sast.zip https://cloud.appscan.com/api/SCX/StaticAnalyzer/SAClientUtil?os=linux
             unzip sast.zip -d appscan-folder
       - name: Run appscan
+        env:
+          APPSCAN_API_KEY_SECRET : ${{ secrets.APPSCAN_API_KEY_SECRET }}
+          APPSCAN_API_KEY_ID : ${{ secrets.APPSCAN_API_KEY_ID }}
         run: |
             appscan=$(find . -type f -name appscan.sh)
             appscanConfig=$(find . -type f -name appscan-config.xml)
