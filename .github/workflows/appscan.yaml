@@ -23,9 +23,6 @@ jobs:
           workflow: build.yaml
           name: language-server-jars
           path: appscan
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: appscan
       - name: Get Date
         id: get-date
         run: |
