@@ -49,8 +49,9 @@ jobs:
             echo $appscanConfig
             ${appscan} prepare -c ${appscanConfig}
             ${appscan} api_login -P $APPSCAN_API_KEY_SECRET -u $APPSCAN_API_KEY_ID -persist
-            irxFile=$(find . -type f -name *.irx)
-            queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxFile} -n ${irxFile})
+            irxPath=$(find . -type f -name *.irx)
+            irxFile=$(basename ${irxPath})
+            queueOutput=$(${appscan} queue_analysis -a $APPSCAN_APP_ID -f ${irxPath} -n ${irxFile})
             echo $queueOutput
       # - uses: actions/upload-artifact@v3
       #   with:
