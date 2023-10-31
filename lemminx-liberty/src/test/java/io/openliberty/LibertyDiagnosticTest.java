@@ -213,7 +213,7 @@ public class LibertyDiagnosticTest {
     }
 
     @Test
-    public void testDiagnosticsForIncludeWindows() {
+    public void testDiagnosticsForIncludeWindows() throws BadLocationException {
         if (!File.separator.equals("\\")) { // skip test if not Windows
             return;
         }
@@ -247,6 +247,22 @@ public class LibertyDiagnosticTest {
 
         XMLAssert.testDiagnosticsFor(serverXML, null, null, serverXMLFile.toURI().toString(), 
                 dirIsFile, fileIsDir);
+
+        String fixedFilePath = "location=\"\\emptyserver.xml\"";
+        TextEdit dirIsFileTextEdit = te(dirIsFile.getRange().getStart().getLine(), dirIsFile.getRange().getStart().getCharacter(),
+                            dirIsFile.getRange().getEnd().getLine(), dirIsFile.getRange().getEnd().getCharacter(), fixedFilePath);
+        CodeAction dirIsFileCodeAction = ca(dirIsFile, dirIsFileTextEdit);
+
+        String fixedDirPath = "location=\"\\testDir.xml\\\"";
+        TextEdit fileIsDirTextEdit = te(fileIsDir.getRange().getStart().getLine(), fileIsDir.getRange().getStart().getCharacter(),
+                            fileIsDir.getRange().getEnd().getLine(), fileIsDir.getRange().getEnd().getCharacter(), fixedDirPath);
+        CodeAction fileIsDirCodeAction = ca(dirIsFile, fileIsDirTextEdit);
+
+
+        XMLAssert.testCodeActionsFor(serverXML, dirIsFile, dirIsFileCodeAction); 
+
+        XMLAssert.testCodeActionsFor(serverXML, fileIsDir, fileIsDirCodeAction);
+
     }
 
     @Test
